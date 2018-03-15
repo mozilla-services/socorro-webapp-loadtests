@@ -36,7 +36,7 @@ Running tests
 The tests were built using `Molotov <https://molotov.readthedocs.io/>`_ and
 can be run using the following command from inside the virtual environment::
 
-    molotov -p 2 -w 2 -d 600
+    molotov -p 1 -w 2 -d 600
 
 Helpful arguments:
 
@@ -45,7 +45,13 @@ Helpful arguments:
 * ``-d`` - duration in seconds to run
 
 
-.. Note::
+**Note about processes:**
+
+   There's some summary work done which doesn't work if there are multiple
+   processes, so keep ``p`` to 1.
+
+
+**Note about cache:**
 
    Socorro webapp aggressively caches things, so you'll want to wait at least
    10 minutes after a load test run for the cache to cool off.
