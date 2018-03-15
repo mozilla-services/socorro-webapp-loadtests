@@ -10,8 +10,8 @@ infrastructure we're building.
 :Date: March 14th, 2018
 
 
-Requirements
-============
+Installing requirements
+=======================
 
 These tests use `pipenv <https://pipenv.readthedocs.io/en/latest/>`_ to manage
 dependencies, so please install it.
@@ -30,8 +30,8 @@ Once you have installed the dependencies, you can always reactivate the virtual
 environmenet using `pipenv shell`.
 
 
-Running The Tests
-=================
+Running tests
+=============
 
 The tests were built using `Molotov <https://molotov.readthedocs.io/>`_ and
 can be run using the following command from inside the virtual environment::
@@ -43,3 +43,16 @@ Helpful arguments:
 * ``-p`` - number of processes
 * ``-w`` - number of workers
 * ``-d`` - duration in seconds to run
+
+
+.. Note::
+
+   Socorro webapp aggressively caches things, so you'll want to wait at least
+   10 minutes after a load test run for the cache to cool off.
+
+
+Contributors
+============
+
+* Chris Hartjes
+* Will Kahn-Greene
