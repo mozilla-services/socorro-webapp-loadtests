@@ -33,12 +33,13 @@ environmenet using `pipenv shell`.
 Running The Tests
 =================
 
-The tests were built using `Molotov
-<https://molotov.readthedocs.io/en/stable/>`_ and can be run using the following
-command from inside the virtual environment::
+The tests were built using `Molotov <https://molotov.readthedocs.io/>`_ and
+can be run using the following command from inside the virtual environment::
 
-    molotov -p <number of processes> -w <number of workers> -d <duration in seconds> tests/
+    molotov -p 2 -w 2 -d 600
 
-For example::
+Helpful arguments:
 
-    molotov -p 2 -w 2 -d 600 tests/
+* ``-p`` - number of processes
+* ``-w`` - number of workers
+* ``-d`` - duration in seconds to run
