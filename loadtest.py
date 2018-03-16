@@ -35,6 +35,9 @@ CRASH_IDS = []
 # each request has completed
 REQ_TO_RESPONSES = {}
 
+# Timeouts
+TIMEOUTS = []
+
 START_TIME = 0
 
 
@@ -145,6 +148,10 @@ def display_summary():
     print(total_seconds)
     print('Rate: %2.2f req/s' % (len(REQ_TO_RESPONSES) * 1.0 / total_seconds))
     print('')
+    print('Timeouts: %s %s' % (len(TIMEOUTS), collections.Counter([t[0] for t in TIMEOUTS])))
+    time_agg = collections.Counter([t[1] for t in TIMEOUTS])
+    for tm, count in sorted(time_agg.items()):
+        print('%s: %s' % (tm, count))
 
 
 @molotov.scenario(66)
@@ -164,7 +171,7 @@ async def test_supersearch_api(session):
         async with session.get(SUPERSEARCH_API, params=params, headers=HEADERS, timeout=TIMEOUT) as resp:
             assert 200 <= resp.status < 500
     except Exception as exc:
-        print('\nexc %r %s' % (exc, format_time(time.time())))
+        TIMEOUTS.append(('ss', time.strftime('%Y-%m-%d %H:%M', time.localtime())))
         raise
 
 
@@ -189,5 +196,5 @@ async def test_processed_crash_api(session):
         async with session.get(PROCESSED_CRASH_API, params=params, headers=HEADERS, timeout=TIMEOUT) as resp:
             assert 200 <= resp.status < 500
     except Exception as exc:
-        print('\nexc %r %s' % (exc, format_time(time.time())))
+        TIMEOUTS.append(('proc', time.strftime('%Y-%m-%d %H:%M', time.localtime())))
         raise
