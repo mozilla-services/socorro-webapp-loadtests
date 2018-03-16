@@ -4,6 +4,7 @@ import os
 import random
 import time
 
+from aiohttp.client_exceptions import ServerTimeoutError
 import isodate
 import molotov
 
@@ -49,6 +50,10 @@ def get_date():
 
     """
     return utc_now().strftime('%Y-%m-%dT%H:%M:%S.') + ('%03dZ' % random.randint(0, 999))
+
+
+def format_time(secs):
+    return time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(secs))
 
 
 @molotov.global_setup()
@@ -104,7 +109,7 @@ def setup_tests(args):
 
     global START_TIME
     START_TIME = time.time()
-    print('Starting at %s' % time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(START_TIME)))
+    print('Starting at %s' % format_time(START_TIME))
 
 
 @molotov.events()
@@ -134,8 +139,8 @@ def display_summary():
     ])
     print('API request counts: %s' % counter)
 
-    print('Started at %s' % time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(START_TIME)))
-    print('Ending at %s' % time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(end_time)))
+    print('Started at %s' % format_time(START_TIME))
+    print('Ending at %s' % format_time(end_time))
     total_seconds = end_time - START_TIME
     print(total_seconds)
     print('Rate: %2.2f req/s' % (len(REQ_TO_RESPONSES) * 1.0 / total_seconds))
@@ -155,8 +160,12 @@ async def test_supersearch_api(session):
         'date': '<%s' % get_date()
     }
 
-    async with session.get(SUPERSEARCH_API, params=params, headers=HEADERS, timeout=TIMEOUT) as resp:
-        assert 200 <= resp.status < 500
+    try:
+        async with session.get(SUPERSEARCH_API, params=params, headers=HEADERS, timeout=TIMEOUT) as resp:
+            assert 200 <= resp.status < 500
+    except Exception as exc:
+        print('\nexc %r %s' % (exc, format_time(time.time())))
+        raise
 
 
 @molotov.scenario(34)
@@ -176,5 +185,9 @@ async def test_processed_crash_api(session):
         'crash_id': random.choice(CRASH_IDS)
     }
 
-    async with session.get(PROCESSED_CRASH_API, params=params, headers=HEADERS, timeout=TIMEOUT) as resp:
-        assert 200 <= resp.status < 500
+    try:
+        async with session.get(PROCESSED_CRASH_API, params=params, headers=HEADERS, timeout=TIMEOUT) as resp:
+            assert 200 <= resp.status < 500
+    except Exception as exc:
+        print('\nexc %r %s' % (exc, format_time(time.time())))
+        raise
