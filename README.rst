@@ -8,6 +8,7 @@ infrastructure we're building.
 
 :License: MPLv2
 :Date: March 14th, 2018
+:Community Participation Guidelines: `Guidelines <https://github.com/mozilla-services/socorro-webapp-loadtests/blob/master/CODE_OF_CONDUCT.md>`_
 
 
 Installing requirements
